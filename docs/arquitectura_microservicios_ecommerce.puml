@@ -1,0 +1,36 @@
+@startuml Arquitectura_Microservicios_Ecommerce
+title Arquitectura de alto nivel – Migración desde monolito a microservicios
+
+actor Usuario
+
+rectangle "Frontend Web/Móvil" as FE
+rectangle "API Gateway" as APIGW
+
+package "Servicios" {
+  [Catálogo de Productos] as Catalog
+  [Gestión de Usuarios] as Users
+  [Procesamiento de Órdenes] as Orders
+}
+
+queue "Event Bus
+(Kafka/RabbitMQ)" as Bus
+
+database "DB Catálogo" as DBCatalog
+database "DB Usuarios" as DBUsers
+database "DB Órdenes" as DBOrders
+
+Usuario --> FE
+FE --> APIGW
+APIGW --> Catalog
+APIGW --> Users
+APIGW --> Orders
+
+Orders --> Bus
+Catalog --> Bus
+Users --> Bus
+
+Catalog --> DBCatalog
+Users --> DBUsers
+Orders --> DBOrders
+
+@enduml
